@@ -1,0 +1,67 @@
+SYNAPSE BISECTION DESCENT (SBD)  
+===============================  
+
+CORE MECHANICS  
+--------------  
+θ ∈ [0,1]                   // normalized parameter domain  
+g = ∂L/∂θ                   // gradient signal  
+τ(θ,g) = min{r∈R: r>θ} if g>0  
+      max{r∈R: r<θ} if g<0  
+θ' = θ + α(τ - θ)          // adaptive bisection step  
+
+PRINCIPAL CONSTANTS & REFERENCE SETS (R)  
+--------------------------------------  
+φ = 1.618033988749895...    R_φ = [0, 0.618034, 1]  // growth harmonic  
+e = 2.718281828459045...    R_e = [0, 0.367879, 1]  // decay harmonic  
+π = 3.141592653589793...    R_π = [0, 0.318309, 1]  // cyclic harmonic  
+√2 = 1.414213562373095...   R_√2 = [0, 0.707107, 1] // diagonal harmonic  
+ln(2)= 0.693147180559...    R_ln= [0, 0.693147, 1]  // doubling harmonic  
+√φ = 1.272019649514...      R_φ√= [0, 0.786151, 1]  // geometric harmonic  
+
+RESONANCE GRID  
+--------------  
+φ e π φ e π φ e π    P[i,j] = pattern[(i+j) mod 3]  
+e π φ e π φ e π φ    θ[i,j] maps to P[i%h, j%w]  
+π φ e π φ e π φ e    3D: θ[c,i,j] → P[i%h, j%w]  
+φ e π φ e π φ e π    4D: θ[n,c,i,j] → P[i%h, j%w]  
+
+STOCHASTIC INJECTION  
+--------------------  
+ξ₀ = 0.01                   // initial noise amplitude  
+γ = 0.95                    // decay factor  
+t = training epoch  
+ξ(t) = ξ₀γᵗ                 // exponentially decaying noise  
+R'(t) = R + ξ(t)           // time-dependent reference shift  
+
+PARAMETER SCALING  
+-----------------  
+θ_norm = (θ - θ_min)/(θ_max - θ_min)  
+θ_denorm = θ_norm*(θ_max - θ_min) + θ_min  
+Maintain θ_min, θ_max statistics per layer  
+
+HYPERPARAMETERS  
+---------------  
+α ∈ [0.1, 0.5]             // flow velocity  
+α_schedule = α₀/√t         // optional temporal decay  
+convergence: ~5–6 epochs  
+batch_size: standard  
+
+MATHEMATICAL CHARACTERISTICS  
+----------------------------  
+- Bisection ensures O(log n) convergence rate  
+- Reference constants anchor the descent trajectory  
+- Resonant grid maintains structured parameter flow  
+- Multi-harmonic constants generate natural coupling  
+- Noise enables early exploration and symmetry breaking  
+- Irrational references form precision attractors  
+- Structured lattices promote crystalline convergence  
+- Constants encode intrinsic harmonic stability  
+
+IMPLEMENTATION NOTES  
+--------------------  
+- Initialize parameters near midpoint (≈0.5)  
+- Observe alignment toward reference anchors  
+- Track distribution evolution over time  
+- Early-phase noise strongly influences stability  
+- Optional rotation of lattice improves diversity  
+- Preserve full tensor dimensional integrity  
